@@ -1,23 +1,23 @@
-import "dotenv/config";
-import cors from "cors";
-import express from "express";
+import config from '@config'
+import { setupServer, startServer } from '@server'
 
-const app = express();
+import connectDB from '@pokus3/db'
+import User from '@pokus3/db/models/user'
 
-app.use(
-	cors({
-		origin: process.env.CORS_ORIGIN || "",
-		methods: ["GET", "POST", "OPTIONS"],
-	}),
-);
+const init = async () => {
+  console.log('Server is starting...')
 
-app.use(express.json());
+  connectDB(config.mongoUri)
 
-app.get("/", (_req, res) => {
-	res.status(200).send("OK");
-});
+  // await User.create({ name: 'John Doe' })
 
-const port = process.env.PORT || 3000;
-app.listen(port, () => {
-	console.log(`Server is running on port ${port}`);
-});
+  setupServer()
+
+  startServer(config.webPort)
+
+  const count = await User.countDocuments()
+
+  console.log(`There are ${count} users in the database.`)
+}
+
+init()
