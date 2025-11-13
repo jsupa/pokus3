@@ -5,7 +5,8 @@
 		"outDir": "dist",
 		"baseUrl": ".",
 		"paths": {
-			"@/*": ["./src/*"]
+			"@/*": ["./src/*"],
+			"@config": ["./src/config/index.ts"]
 		},
 		"jsx": "react-jsx"
 	}
