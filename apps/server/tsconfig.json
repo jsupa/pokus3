@@ -6,8 +6,10 @@
 		"baseUrl": ".",
 		"paths": {
 			"@/*": ["./src/*"],
+			"@controllers/*": ["./src/controllers/*.controller.ts"],
 			"@config": ["./src/config/index.ts"],
-			"@server": ["./src/lib/server.ts"]
+			"@server": ["./src/lib/server.ts"],
+			"@router": ["./src/config/router.ts"]
 		},
 		"jsx": "react-jsx"
 	}

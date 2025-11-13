@@ -1,10 +1,14 @@
-import Express from 'express'
-import type { Request } from 'express'
 import cors from 'cors'
 import morgan from 'morgan'
+import Express from 'express'
+import passport from 'passport'
+import type { Request, Response, NextFunction } from 'express'
 
 import { ExpressConfig } from '@pokus3/locales'
 import config from '@/config'
+import router from '@router'
+
+import '@/config/passport'
 
 const app: Express.Application = Express()
 
@@ -19,6 +23,22 @@ const setupServer = () => {
   app.use(ExpressConfig.init)
   app.use(Express.json())
   app.use(Express.urlencoded({ extended: true }))
+
+  app.use(passport.initialize())
+
+  app.use('/', router)
+
+  app.use((_req: Request, res: Response) => {
+    res.status(404)
+    throw new Error('Not Found')
+  })
+
+  app.use(errorHandler)
+}
+
+const errorHandler = (err: any, _req: Request, res: Response, _next: NextFunction) => {
+  // console.error(err.stack)
+  res.json({ code: res.statusCode, error: err.message || 'Internal Server Error' })
 }
 
 const startServer = (port: string) => {
