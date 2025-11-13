@@ -7,6 +7,7 @@ import type { Request, Response, NextFunction } from 'express'
 import { ExpressConfig } from '@pokus3/locales'
 import config from '@/config'
 import router from '@router'
+import locals from '@/lib/locals'
 
 import '@/config/passport'
 
@@ -20,17 +21,21 @@ const setupServer = () => {
 
   if (config.isDev) app.use(cors({ origin: config.corsOrigin, credentials: true }))
 
-  app.use(ExpressConfig.init)
+  app.use(ExpressConfig.init) // i18n init middleware
   app.use(Express.json())
   app.use(Express.urlencoded({ extended: true }))
 
   app.use(passport.initialize())
 
+  app.use(locals)
+
+  app.use(morgan(':method :url :status :locale - :response-time ms'))
+
   app.use('/', router)
 
   app.use((_req: Request, res: Response) => {
     res.status(404)
-    throw new Error('Not Found')
+    throw new Error('error.not_found'.t)
   })
 
   app.use(errorHandler)

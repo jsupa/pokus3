@@ -3,7 +3,7 @@
 	"ui": "tui",
 	"tasks": {
 		"build": {
-			"dependsOn": ["^build"],
+			"dependsOn": ["^build", "check-locales:missing"],
 			"inputs": ["$TURBO_DEFAULT$", ".env*"],
 			"outputs": ["dist/**"]
 		},
@@ -12,6 +12,9 @@
 		},
 		"check-types": {
 			"dependsOn": ["^check-types"]
+		},
+		"check-locales:missing": {
+			"cache": false
 		},
 		"dev": {
 			"cache": false,
