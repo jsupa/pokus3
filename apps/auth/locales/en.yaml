@@ -1,3 +1,4 @@
 error:
  not_found: Not Found
- unauthorized: error.unauthorized
+ unauthorized: Unauthorized
+ already_authenticated: Already Authenticated
