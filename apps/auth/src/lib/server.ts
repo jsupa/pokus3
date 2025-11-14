@@ -1,4 +1,3 @@
-import cors from 'cors'
 import dayjs from 'dayjs'
 import morgan from 'morgan'
 import Express from 'express'
@@ -21,9 +20,7 @@ morgan.token('locale', (req: Request) => req.getLocale())
 morgan.token('sessionID', (req: Request) => req.sessionID || '')
 
 const setupServer = () => {
-  app.set('trust proxy', 1) // Trust first proxy (nginx)
-
-  // if (config.isDev) app.use(cors({ origin: config.corsOrigin, credentials: true }))
+  app.set('trust proxy', 1)
 
   app.use(ExpressConfig.init) // i18n init middleware
   app.use(Express.json())
@@ -49,10 +46,7 @@ const setupServer = () => {
 }
 
 const errorHandler = (err: any, req: Request, res: Response, _next: NextFunction) => {
-  // console.error(err.stack)
   res.json({
-    originDomain: req.get('Host'),
-    session: req.session,
     sessionID: req.sessionID,
     code: res.statusCode,
     error: err.message || 'Internal Server Error',
