@@ -4,7 +4,7 @@ import { Strategy as JwtStrategy, ExtractJwt } from 'passport-jwt'
 import type { Request, Response, NextFunction } from 'express'
 
 import config from '@config'
-import User from '@pokus3/db/models/user'
+import User, { type IUser } from '@pokus3/db/models/user'
 
 // @ts-ignore
 const MagicLoginStrategy = _MagicLoginStrategy.default
@@ -61,6 +61,20 @@ const jwtStrategy = new JwtStrategy(
 
 passport.use('magiclogin', magicLogin)
 passport.use('jwt', jwtStrategy)
+
+passport.serializeUser((user: Express.User, done) => {
+  done(null, (user as IUser).id)
+})
+
+passport.deserializeUser(async (id: string, done) => {
+  try {
+    const user = await User.findById(id)
+    if (!user) throw new Error('User not found during deserialization')
+    done(null, user)
+  } catch (error) {
+    done(error)
+  }
+})
 
 export const auth = (req: Request, res: Response, next: NextFunction) => {
   passport.authenticate('jwt', { session: false }, (err: string | undefined, user: Express.User) => {
