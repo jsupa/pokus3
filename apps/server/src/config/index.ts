@@ -4,7 +4,7 @@ const config = {
   corsOrigin: process.env.CORS_ORIGIN || 'localhost:3000',
 
   webPort: process.env.WEB_PORT || '3002',
-  mongoUri: process.env.MONGO_URI || 'mongodb://localhost:27017/dev-001',
+  mongoUri: process.env.MONGO_URI || 'mongodb://db:27017/dev-001',
 
   sessionSecret: process.env.SESSION_SECRET || 'default_session_secret',
   cookieDomain: process.env.COOKIE_DOMAIN || '.pokus.local',

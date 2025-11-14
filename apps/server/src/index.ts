@@ -7,7 +7,7 @@ import User from '@pokus3/db/models/user'
 const init = async () => {
   console.log('Server is starting...')
 
-  connectDB(config.mongoUri)
+  await connectDB(config.mongoUri)
 
   // await User.create({ name: 'John Doe' })
 

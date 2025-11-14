@@ -8,13 +8,30 @@ services:
 
     command: sleep infinity
 
-    network_mode: service:db
+    networks:
+      - pokus_net
 
   db:
     image: mongo:latest
     restart: unless-stopped
     volumes:
       - mongodb-data:/data/db
+    ports:
+      - "27017:27017"
+    networks:
+      - pokus_net
+
+  nginx:
+    image: nginx:alpine
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    volumes:
+      - ../nginx.dev.conf:/etc/nginx/conf.d/default.conf:ro
+    depends_on:
+      - app
+    networks:
+      - pokus_net
 
   rabbitmq:
     image: rabbitmq:management
@@ -27,7 +44,13 @@ services:
       - RABBITMQ_DEFAULT_PASS=guest
     volumes:
       - rabbitmq-data:/var/lib/rabbitmq
+    networks:
+      - pokus_net
 
 volumes:
   mongodb-data:
   rabbitmq-data:
+
+networks:
+  pokus_net:
+    driver: bridge

@@ -18,11 +18,12 @@ const app: Express.Application = Express()
 
 // morgan.token('body', (req: Request) => JSON.stringify(req.body))
 morgan.token('locale', (req: Request) => req.getLocale())
+morgan.token('sessionID', (req: Request) => req.sessionID || '')
 
 const setupServer = () => {
-  app.set('trust proxy', 1)
+  app.set('trust proxy', 1) // Trust first proxy (nginx)
 
-  if (config.isDev) app.use(cors({ origin: config.corsOrigin, credentials: true }))
+  // if (config.isDev) app.use(cors({ origin: config.corsOrigin, credentials: true }))
 
   app.use(ExpressConfig.init) // i18n init middleware
   app.use(Express.json())
@@ -35,7 +36,7 @@ const setupServer = () => {
 
   app.use(locals)
 
-  app.use(morgan(':method :url :status :locale - :response-time ms'))
+  app.use(morgan(':method :url :status :locale - :response-time ms - :sessionID'))
 
   app.use('/', router)
 
@@ -49,7 +50,13 @@ const setupServer = () => {
 
 const errorHandler = (err: any, req: Request, res: Response, _next: NextFunction) => {
   // console.error(err.stack)
-  res.json({ sessionID: req.sessionID, code: res.statusCode, error: err.message || 'Internal Server Error' })
+  res.json({
+    originDomain: req.get('Host'),
+    session: req.session,
+    sessionID: req.sessionID,
+    code: res.statusCode,
+    error: err.message || 'Internal Server Error',
+  })
 }
 
 const store = MongoStore.create({
@@ -66,9 +73,11 @@ const sessionConfig = session({
     httpOnly: true,
     secure: config.isProd,
     domain: config.cookieDomain,
+    sameSite: 'lax',
     maxAge: dayjs().add(30, 'day').toDate().getTime(),
   },
-  saveUninitialized: false,
+  saveUninitialized: true,
+  proxy: true,
 })
 
 const startServer = (port: string) => {
