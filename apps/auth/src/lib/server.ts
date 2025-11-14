@@ -1,6 +1,7 @@
 import dayjs from 'dayjs'
 import morgan from 'morgan'
 import Express from 'express'
+import { z, ZodError } from 'zod'
 import passport from 'passport'
 import session from 'express-session'
 import MongoStore from 'connect-mongo'
@@ -46,11 +47,19 @@ const setupServer = () => {
 }
 
 const errorHandler = (err: any, req: Request, res: Response, _next: NextFunction) => {
-  res.json({
+  const payload = {
     sessionID: req.sessionID,
     code: res.statusCode,
     error: err.message || 'Internal Server Error',
-  })
+    messages: undefined as any,
+  }
+
+  if (err instanceof ZodError) {
+    payload.error = 'Validation error'
+    payload.messages = err.issues
+  }
+
+  res.json(payload)
 }
 
 const store = MongoStore.create({
