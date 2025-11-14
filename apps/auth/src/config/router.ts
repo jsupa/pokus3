@@ -1,9 +1,20 @@
 import express from 'express'
-import { auth } from '@/config/passport'
-import userController from '@controllers/user'
+
+import { checkLogin, checkAuth } from '@/config/passport'
+
+import magicLoginRoute from '@routes/magiclogin'
+import userRoute from '@routes/user'
+import config from '@config'
 
 export const routes: express.Router = express.Router()
 
-routes.use('/me', auth, userController.me)
+routes.use('/user', checkAuth, userRoute)
+routes.use('/magiclogin', checkLogin, magicLoginRoute)
+
+routes.get('/logout', checkAuth, (req, res) => {
+  req.logout(() => {
+    res.redirect(config.magicLoginRedirect)
+  })
+})
 
 export default routes

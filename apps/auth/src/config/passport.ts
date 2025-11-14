@@ -45,7 +45,7 @@ const verify = async (payload: any, done: Function) => {
 
 const magicLogin = new MagicLoginStrategy({
   secret: config.magicLoginSecret,
-  callbackUrl: '/auth/magiclogin/callback',
+  callbackUrl: '/magiclogin/callback',
   sendMagicLink,
   verify,
   jwtOptions: { expiresIn: config.magicLinkExpiration },
@@ -76,7 +76,7 @@ passport.deserializeUser(async (id: string, done) => {
   }
 })
 
-export const auth = (req: Request, res: Response, next: NextFunction) => {
+const auth = (req: Request, res: Response, next: NextFunction) => {
   passport.authenticate('jwt', { session: false }, (err: string | undefined, user: Express.User) => {
     res.status(500)
     if (err) throw new Error(err)
@@ -90,3 +90,19 @@ export const auth = (req: Request, res: Response, next: NextFunction) => {
     next()
   })(req, res, next)
 }
+
+const checkLogin = (req: Request, res: Response, next: NextFunction): void => {
+  if (req.isUnauthenticated()) return next()
+
+  res.status(400)
+  throw new Error('error.already_authenticated'.t)
+}
+
+const checkAuth = (req: Request, res: Response, next: NextFunction): void => {
+  if (req.isAuthenticated()) return next()
+
+  res.status(401)
+  throw new Error('error.unauthorized'.t)
+}
+
+export { magicLogin, auth, checkLogin, checkAuth }

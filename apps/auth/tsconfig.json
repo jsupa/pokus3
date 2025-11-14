@@ -5,11 +5,12 @@
 		"outDir": "dist",
 		"baseUrl": ".",
 		"paths": {
-			"@/*": ["./src/*"],
-			"@controllers/*": ["./src/controllers/*.controller.ts"],
 			"@config": ["./src/config/index.ts"],
 			"@server": ["./src/lib/server.ts"],
-			"@router": ["./src/config/router.ts"]
+			"@router": ["./src/config/router.ts"],
+			"@controllers/*": ["./src/controllers/*.controller.ts"],
+			"@routes/*": ["./src/routes/*.route.ts"],
+			"@/*": ["./src/*"]
 		},
 		"jsx": "react-jsx"
 	}

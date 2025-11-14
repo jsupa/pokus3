@@ -11,6 +11,7 @@ const config = {
 
   magicLoginSecret: process.env.MAGIC_LOGIN_SECRET || 'default_secret',
   magicLinkExpiration: '15m',
+  magicLoginRedirect: process.env.MAGIC_LOGIN_REDIRECT || 'http://dashboard.pokus.local',
 
   jwtSecret: process.env.JWT_SECRET || 'default_jwt_secret',
 
