@@ -24,11 +24,6 @@ export function ThemeLogo({ className, priority }: ThemeLogoProps) {
   }
 
   return (
-    <Image
-      src={resolvedTheme === 'dark' ? logoDark : logoLight}
-      alt="Logo"
-      className={className}
-      priority={priority}
-    />
+    <Image src={resolvedTheme === 'dark' ? logoDark : logoLight} alt="Logo" className={className} priority={priority} />
   )
 }

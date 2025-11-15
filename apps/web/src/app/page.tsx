@@ -31,9 +31,7 @@ export default function Home() {
           <Card>
             <CardHeader>
               <CardTitle>Welcome Back!</CardTitle>
-              <CardDescription>
-                You are successfully logged in{user.email && ` as ${user.email}`}
-              </CardDescription>
+              <CardDescription>You are successfully logged in{user.email && ` as ${user.email}`}</CardDescription>
             </CardHeader>
             <CardContent>
               <Button onClick={logout} variant="outline" className="w-full">
