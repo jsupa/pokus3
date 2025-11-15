@@ -1,2 +1,3 @@
 error:
  not_found: error.not_found
+ unauthorized: error.unauthorized

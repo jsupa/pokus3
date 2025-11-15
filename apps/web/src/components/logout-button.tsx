@@ -2,22 +2,13 @@
 
 import { LogOut } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import { useAuth } from '@/contexts/auth-context'
 
 export function LogoutButton() {
-  const handleLogout = async () => {
-    try {
-      await fetch(process.env.NEXT_PUBLIC_LOGOUT_URL || '/logout', {
-        method: 'GET',
-        credentials: 'include',
-      })
-      window.location.reload()
-    } catch (error) {
-      console.error('Logout error:', error)
-    }
-  }
+  const { logout } = useAuth()
 
   return (
-    <Button variant="outline" size="icon" onClick={handleLogout}>
+    <Button variant="outline" size="icon" onClick={logout}>
       <LogOut className="h-[1.2rem] w-[1.2rem]" />
       <span className="sr-only">Logout</span>
     </Button>

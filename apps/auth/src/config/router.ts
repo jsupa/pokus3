@@ -4,7 +4,6 @@ import { checkLogin, checkAuth } from '@/config/passport'
 
 import magicLoginRoute from '@routes/magiclogin'
 import userRoute from '@routes/user'
-import config from '@config'
 
 export const routes: express.Router = express.Router()
 
@@ -12,9 +11,7 @@ routes.use('/user', checkAuth, userRoute)
 routes.use('/magiclogin', checkLogin, magicLoginRoute)
 
 routes.get('/logout', checkAuth, (req, res) => {
-  req.logout(() => {
-    res.redirect(config.magicLoginRedirect)
-  })
+  req.logout(() => res.json({ message: 'Logged out successfully' }))
 })
 
 export default routes

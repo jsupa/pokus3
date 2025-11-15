@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { ThemeLogo } from '@/components/theme-logo'
 import { toast } from 'sonner'
 
 interface ValidationMessage {
@@ -18,7 +19,11 @@ interface ApiResponse {
   messages?: ValidationMessage[]
 }
 
-export function LoginForm() {
+interface LoginFormProps {
+  isAuthOnline?: boolean
+}
+
+export function LoginForm({ isAuthOnline = true }: LoginFormProps) {
   const [destination, setDestination] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [isSuccess, setIsSuccess] = useState(false)
@@ -88,6 +93,9 @@ export function LoginForm() {
     return (
       <Card>
         <CardHeader>
+          <div className="mb-4 flex justify-center">
+            <ThemeLogo className="h-12 w-auto" priority />
+          </div>
           <CardTitle>Check Your Email</CardTitle>
           <CardDescription>
             We've sent a magic login link to <strong>{destination}</strong>
@@ -108,6 +116,9 @@ export function LoginForm() {
   return (
     <Card>
       <CardHeader>
+        <div className="mb-4 flex justify-center">
+          <ThemeLogo className="h-12 w-auto" priority />
+        </div>
         <CardTitle>Magic Login</CardTitle>
         <CardDescription>No password needed. We'll send you a login link.</CardDescription>
       </CardHeader>
@@ -131,8 +142,8 @@ export function LoginForm() {
             />
             {fieldErrors.destination && <p className="text-destructive text-sm">{fieldErrors.destination}</p>}
           </div>
-          <Button type="submit" className="w-full" disabled={isLoading}>
-            {isLoading ? 'Sending...' : 'Send Magic Link'}
+          <Button type="submit" className="w-full" disabled={isLoading || !isAuthOnline}>
+            {isLoading ? 'Sending...' : !isAuthOnline ? 'Auth Service Offline' : 'Send Magic Link'}
           </Button>
         </form>
       </CardContent>
