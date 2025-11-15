@@ -8,11 +8,9 @@ import User from '@pokus3/db/models/user'
 import '@/config/passport'
 
 const init = async () => {
-  console.log('Auth Server is starting...')
+  console.log('API Server is starting...')
 
   await connectDB(config.mongoUri)
-
-  // await User.create({ name: 'John Doe' })
 
   setupServer({
     mongoUri: config.mongoUri,

@@ -8,6 +8,11 @@ services:
 
     command: sleep infinity
 
+    ports:
+      - "3001:3001"
+      - "3002:3002"
+      - "3003:3003"
+
     networks:
       - pokus_net
 

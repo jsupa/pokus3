@@ -7,6 +7,7 @@
 		"paths": {
 			"@config": ["./src/config/index.ts"],
 			"@router": ["./src/config/router.ts"],
+			"@middlewares/*": ["./src/middlewares/*.middleware.ts"],
 			"@controllers/*": ["./src/controllers/*.controller.ts"],
 			"@validations/*": ["./src/validations/*.validation.ts"],
 			"@routes/*": ["./src/routes/*.route.ts"],

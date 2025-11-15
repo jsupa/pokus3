@@ -3,7 +3,7 @@ import { magicLogin } from '@/config/passport'
 import passport from 'passport'
 import config from '@config'
 
-import validate from '@middlewares/validation'
+import { validate } from '@pokus3/server'
 
 import { magicLoginSchema, callbackSchema } from '@validations/magiclogin'
 
