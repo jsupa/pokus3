@@ -7,8 +7,8 @@
       "default": "./src/index.ts"
     },
     "./models/*": {
-      "types": "./dist/models/*.d.ts",
-      "default": "./src/models/*.ts"
+      "types": "./dist/models/*.model.d.ts",
+      "default": "./src/models/*.model.ts"
     },
     "./*": {
       "types": "./dist/*.d.ts",
@@ -19,15 +19,18 @@
     "build": "tsdown"
   },
   "devDependencies": {
-    "tsdown": "catalog:",
-    "@pokus3/config": "workspace:*"
+    "@pokus3/config": "workspace:*",
+    "@types/mongoose-delete": "^1.0.6",
+    "tsdown": "catalog:"
   },
   "peerDependencies": {
     "typescript": "^5"
   },
   "dependencies": {
-    "mongoose": "^8.14.0",
+    "cron-parser": "^5.4.0",
     "dotenv": "catalog:",
+    "mongoose": "^8.14.0",
+    "mongoose-delete": "^1.0.6",
     "zod": "catalog:"
   }
 }

@@ -31,4 +31,13 @@ const checkAuth = (req: Request, res: Response, next: NextFunction): void => {
   throw new Error('error.unauthorized'.t)
 }
 
-export { checkAuth, checkLogin }
+const isAdmin = (req: Request, res: Response, next: NextFunction): void => {
+  const user = req.user as IUser
+
+  if (user && user.admin) return next()
+
+  res.status(403)
+  throw new Error('error.forbidden'.t)
+}
+
+export { checkAuth, checkLogin, isAdmin }
