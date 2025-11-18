@@ -8,11 +8,12 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { toast } from 'sonner'
 import { useAuth } from '@/contexts/auth-context'
+import { QUEUE_NAMES } from '@pokus3/queue/config'
 
 type Job = {
   _id: string
   name: string
-  type: 'EMAIL_SENDING'
+  type: (typeof QUEUE_NAMES)[keyof typeof QUEUE_NAMES]
   cronExpression: string
   enable?: boolean
   retryAttempts?: number
@@ -29,7 +30,7 @@ export default function JobAdminPage() {
   const [editingJob, setEditingJob] = useState<Job | null>(null)
   const [formData, setFormData] = useState({
     name: '',
-    type: 'EMAIL_SENDING' as const,
+    type: QUEUE_NAMES.EMAIL_DELETION,
     cronExpression: '',
     enable: true,
     retryAttempts: 0,
@@ -120,7 +121,7 @@ export default function JobAdminPage() {
 
       setFormData({
         name: '',
-        type: 'EMAIL_SENDING',
+        type: QUEUE_NAMES.EMAIL_DELETION,
         cronExpression: '',
         enable: true,
         retryAttempts: 0,
@@ -150,7 +151,7 @@ export default function JobAdminPage() {
     setEditingJob(null)
     setFormData({
       name: '',
-      type: 'EMAIL_SENDING',
+      type: QUEUE_NAMES.EMAIL_DELETION,
       cronExpression: '',
       enable: true,
       retryAttempts: 0,
@@ -241,10 +242,16 @@ export default function JobAdminPage() {
                 id="type"
                 className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                 value={formData.type}
-                onChange={(e) => setFormData({ ...formData, type: e.target.value as 'EMAIL_SENDING' })}
+                onChange={(e) =>
+                  setFormData({ ...formData, type: e.target.value as (typeof QUEUE_NAMES)[keyof typeof QUEUE_NAMES] })
+                }
                 disabled={submitting}
               >
-                <option value="EMAIL_SENDING">EMAIL_SENDING</option>
+                {Object.values(QUEUE_NAMES).map((jobType) => (
+                  <option key={String(jobType)} value={String(jobType)}>
+                    {String(jobType).replace('_', ' ')}
+                  </option>
+                ))}
               </select>
             </div>
 

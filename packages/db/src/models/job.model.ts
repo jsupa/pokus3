@@ -1,14 +1,10 @@
 import mongoose, { Schema } from 'mongoose'
 import MongooseDelete, { type SoftDeleteDocument, type SoftDeleteModel } from 'mongoose-delete'
-
-// enums for job types
-enum JobType {
-  EMAIL_SENDING = 'EMAIL_SENDING',
-}
+import { QUEUE_NAMES } from '@pokus3/queue/config'
 
 export interface IJob extends SoftDeleteDocument {
   name: string // Job name
-  type: JobType // Job type
+  type: (typeof QUEUE_NAMES)[keyof typeof QUEUE_NAMES] // Job type
   enable: boolean // Is job enabled
   lastRunAt: Date | null // Last run timestamp
   nextRunAt: Date | null // Next run timestamp
@@ -24,7 +20,7 @@ export interface IJobModel extends SoftDeleteModel<IJob> {}
 const userSchema: Schema = new Schema(
   {
     name: { type: String, required: true },
-    type: { type: String, enum: Object.values(JobType), required: true },
+    type: { type: String, enum: Object.values(QUEUE_NAMES), required: true },
     enable: { type: Boolean, default: true },
     lastRunAt: { type: Date, default: null },
     nextRunAt: { type: Date, default: null },

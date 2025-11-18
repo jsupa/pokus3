@@ -38,6 +38,14 @@ services:
     networks:
       - pokus_net
 
+  redis:
+    image: redis:latest
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    networks:
+      - pokus_net
+
   rabbitmq:
     image: rabbitmq:management
     restart: unless-stopped

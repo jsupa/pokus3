@@ -13,6 +13,7 @@
     "@pokus3/db": "workspace:*",
     "@pokus3/server": "workspace:*",
     "@pokus3/locales": "workspace:*",
+    "@pokus3/queue": "workspace:*",
     "cors": "^2.8.5",
     "dayjs": "^1.11.19",
     "dotenv": "catalog:",

@@ -1,0 +1,31 @@
+{
+  "name": "@pokus3/queue",
+  "type": "module",
+  "exports": {
+    "./manager": {
+      "types": "./dist/manager.d.ts",
+      "default": "./src/manager.ts"
+    },
+    "./config": {
+      "types": "./dist/config.d.ts",
+      "default": "./src/config.ts"
+    }
+  },
+  "scripts": {
+    "build": "tsdown"
+  },
+  "devDependencies": {
+    "@pokus3/config": "workspace:*",
+    "@types/mongoose-delete": "^1.0.6",
+    "tsdown": "catalog:"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
+  },
+  "dependencies": {
+    "bullmq": "^5.63.2",
+    "dotenv": "catalog:",
+    "mongoose": "^8.14.0",
+    "mongoose-delete": "^1.0.6"
+  }
+}

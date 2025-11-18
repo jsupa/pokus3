@@ -22,7 +22,8 @@
 				"redhat.vscode-yaml",
 				"searKing.preview-vscode",
 				"esbenp.prettier-vscode",
-				"WakaTime.vscode-wakatime"
+				"WakaTime.vscode-wakatime",
+				"mongodb.mongodb-vscode"
 			]
 		}
 	},
