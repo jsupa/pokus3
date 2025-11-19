@@ -72,6 +72,9 @@ importers:
       '@pokus3/server':
         specifier: workspace:*
         version: link:../../packages/server
+      bullmq:
+        specifier: ^5.63.2
+        version: 5.63.2
       cors:
         specifier: ^2.8.5
         version: 2.8.5
@@ -237,14 +240,42 @@ importers:
         specifier: 'catalog:'
         version: 5.9.3
 
+  apps/events:
+    dependencies:
+      '@pokus3/db':
+        specifier: workspace:*
+        version: link:../../packages/db
+      '@pokus3/queue':
+        specifier: workspace:*
+        version: link:../../packages/queue
+      '@pokus3/server':
+        specifier: workspace:*
+        version: link:../../packages/server
+      bullmq:
+        specifier: ^5.63.2
+        version: 5.63.2
+    devDependencies:
+      '@pokus3/config':
+        specifier: workspace:*
+        version: link:../../packages/config
+      '@types/node':
+        specifier: 'catalog:'
+        version: 22.19.1
+      tsdown:
+        specifier: 'catalog:'
+        version: 0.15.12(ms@2.1.3)(typescript@5.9.3)
+      tsx:
+        specifier: ^4.20.6
+        version: 4.20.6
+      typescript:
+        specifier: 'catalog:'
+        version: 5.9.3
+
   apps/scheduler:
     dependencies:
       '@pokus3/db':
         specifier: workspace:*
         version: link:../../packages/db
-      '@pokus3/locales':
-        specifier: workspace:*
-        version: link:../../packages/locales
       '@pokus3/queue':
         specifier: workspace:*
         version: link:../../packages/queue

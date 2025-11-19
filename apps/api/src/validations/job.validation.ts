@@ -5,6 +5,7 @@ const jobCreateSchema = z.object({
   name: z.string().min(1).max(50),
   type: z.enum(Object.values(QUEUE_NAMES)),
   cronExpression: z.string().min(1).max(100),
+  enable: z.boolean().optional(),
   retryAttempts: z.number().min(0).max(10).optional(),
 })
 

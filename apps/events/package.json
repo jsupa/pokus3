@@ -1,5 +1,5 @@
 {
-  "name": "api",
+  "name": "events",
   "main": "src/index.ts",
   "type": "module",
   "scripts": {
@@ -11,31 +11,13 @@
   },
   "dependencies": {
     "@pokus3/db": "workspace:*",
-    "@pokus3/locales": "workspace:*",
     "@pokus3/queue": "workspace:*",
     "@pokus3/server": "workspace:*",
-    "bullmq": "^5.63.2",
-    "cors": "^2.8.5",
-    "dayjs": "^1.11.19",
-    "dotenv": "catalog:",
-    "express": "^5.1.0",
-    "express-session": "^1.18.2",
-    "jsonwebtoken": "^9.0.2",
-    "morgan": "^1.10.1",
-    "passport": "^0.7.0",
-    "passport-jwt": "^4.0.1",
-    "zod": "catalog:"
+    "bullmq": "^5.63.2"
   },
   "devDependencies": {
     "@pokus3/config": "workspace:*",
-    "@types/cors": "^2.8.19",
-    "@types/express": "^5.0.5",
-    "@types/express-session": "^1.18.2",
-    "@types/jsonwebtoken": "^9.0.10",
-    "@types/morgan": "^1.9.10",
     "@types/node": "catalog:",
-    "@types/passport": "^1.0.17",
-    "@types/passport-jwt": "^4.0.1",
     "tsdown": "catalog:",
     "tsx": "^4.20.6",
     "typescript": "catalog:"
