@@ -1,6 +1,7 @@
 packages:
   - apps/*
   - packages/*
+  - apps/workers/*
 
 catalog:
   '@types/node': ^22.19.1

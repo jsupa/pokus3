@@ -34,6 +34,10 @@ for (const type of types) {
     console.log(`[${type}][EVENT] Job active: ${jobId}`)
   })
 
+  queue.on('completed', ({ jobId, returnvalue }) => {
+    console.log(`[${type}][EVENT] Job completed: ${jobId}, return value: ${JSON.stringify(returnvalue)}`)
+  })
+
   queue.on('removed', ({ jobId }) => {
     console.log(`[${type}][EVENT] Job removed: ${jobId}`)
   })
