@@ -1,4 +1,4 @@
-import config from '@config'
+import config from '@pokus3/config'
 import { setupServer, startServer } from '@pokus3/server'
 import router from '@router'
 
@@ -20,7 +20,7 @@ const init = async () => {
     router,
   })
 
-  startServer(config.webPort)
+  startServer(config.api!.webPort)
 
   const count = await User.countDocuments()
 

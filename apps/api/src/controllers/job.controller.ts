@@ -1,7 +1,7 @@
 import type { Request, Response } from 'express'
-import { Queue } from 'bullmq'
-import config from '@config'
+import config from '@pokus3/config'
 import Job from '@pokus3/db/models/job'
+import { upsertScheduler, removeScheduler, getAllSchedulers } from '@pokus3/queue/operations'
 
 const index = async (_req: Request, res: Response) => {
   const jobs = await Job.find({})
@@ -15,7 +15,7 @@ const schedulers = async (_req: Request, res: Response) => {
   const schedulers = {} as Record<string, any>
 
   for (const job of jobs) {
-    const activeSchedulers = await getActiveJobsStauses(job.type)
+    const activeSchedulers = await getAllSchedulers(job.type, config.redisHost)
 
     if (activeSchedulers.length <= 0) continue
 
@@ -31,17 +31,10 @@ const create = async (req: Request, res: Response) => {
   const job = await Job.create({ name, type, cronExpression, retryAttempts, enable })
 
   if (enable) {
-    const queue = new Queue(type, {
-      connection: { host: config.redisHost },
+    await upsertScheduler(type, config.redisHost, job.id, cronExpression, job.name, {
+      jobId: job.id,
+      payload: job.payload,
     })
-
-    await queue.upsertJobScheduler(
-      job.id,
-      { pattern: cronExpression },
-      { name: job.name, data: { jobId: job.id, payload: job.payload } },
-    )
-
-    await queue.close()
   }
 
   res.status(201).json(job)
@@ -54,13 +47,7 @@ const archive = async (req: Request, res: Response) => {
 
   if (!job) throw new Error('Job not found')
 
-  const queue = new Queue(job.type, {
-    connection: { host: config.redisHost },
-  })
-
-  await queue.removeJobScheduler(job.id)
-
-  await queue.close()
+  await removeScheduler(job.type, config.redisHost, job.id)
 
   await job.deleteOne()
 
@@ -77,47 +64,16 @@ const update = async (req: Request, res: Response) => {
     return res.status(404).json({ message: 'Job not found' })
   }
 
-  const queue = new Queue(job.type, {
-    connection: { host: config.redisHost },
-  })
-
-  await queue.removeJobScheduler(job.id)
+  await removeScheduler(job.type, config.redisHost, job.id)
 
   if (enable) {
-    await queue.upsertJobScheduler(
-      job.id,
-      { pattern: cronExpression },
-      { name: job.name, data: { jobId: job.id, payload: job.payload } },
-    )
+    await upsertScheduler(job.type, config.redisHost, job.id, cronExpression, job.name, {
+      jobId: job.id,
+      payload: job.payload,
+    })
   }
-
-  await queue.close()
 
   res.json(job)
 }
 
 export default { index, schedulers, create, archive, update }
-
-const getActiveJobsStauses = async (queueType: string) => {
-  const queue = new Queue(queueType, {
-    connection: { host: config.redisHost },
-  })
-
-  const existingSchedulers = await queue.getJobSchedulers(0, 100)
-
-  await queue.close()
-
-  return existingSchedulers
-}
-
-const getActiveJobsInQueue = async (queueType: string) => {
-  const queue = new Queue(queueType, {
-    connection: { host: config.redisHost },
-  })
-
-  const activeJobs = await queue.getJobCounts('wait', 'completed', 'failed', 'repeat')
-
-  await queue.close()
-
-  return activeJobs
-}

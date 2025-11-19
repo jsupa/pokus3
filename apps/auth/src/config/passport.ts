@@ -2,7 +2,7 @@ import passport from 'passport'
 import _MagicLoginStrategy from 'passport-magic-login'
 import type { Request, Response, NextFunction } from 'express'
 
-import config from '@config'
+import config from '@pokus3/config'
 import User, { type IUser } from '@pokus3/db/models/user'
 
 // @ts-ignore
@@ -32,11 +32,11 @@ const verify = async (payload: any, done: Function) => {
 }
 
 const magicLogin = new MagicLoginStrategy({
-  secret: config.magicLoginSecret,
+  secret: config.auth!.magicLoginSecret,
   callbackUrl: '/magiclogin/callback',
   sendMagicLink,
   verify,
-  jwtOptions: { expiresIn: config.magicLinkExpiration },
+  jwtOptions: { expiresIn: config.auth!.magicLinkExpiration },
 })
 
 passport.use('magiclogin', magicLogin)

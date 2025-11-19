@@ -2,13 +2,15 @@
   "name": "@pokus3/queue",
   "type": "module",
   "exports": {
-    "./manager": {
-      "types": "./dist/manager.d.ts",
-      "default": "./src/manager.ts"
-    },
     "./config": {
-      "types": "./dist/config.d.ts",
+      "types": "./src/config.ts",
+      "import": "./src/config.ts",
       "default": "./src/config.ts"
+    },
+    "./operations": {
+      "types": "./src/operations.ts",
+      "import": "./src/operations.ts",
+      "default": "./src/operations.ts"
     }
   },
   "scripts": {

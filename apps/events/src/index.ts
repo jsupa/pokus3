@@ -1,7 +1,6 @@
-import config from '@config'
+import config from '@pokus3/config'
 import connectDB from '@pokus3/db'
 import Job from '@pokus3/db/models/job'
-// import { queueManager, QUEUE_NAMES } from '@pokus3/queue'
 import { QueueEvents } from 'bullmq'
 
 const getWorkerTypes = async () => {

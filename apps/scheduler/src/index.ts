@@ -1,8 +1,7 @@
-import config from '@config'
+import config from '@pokus3/config'
 import connectDB from '@pokus3/db'
 import Job from '@pokus3/db/models/job'
-// import { queueManager, QUEUE_NAMES } from '@pokus3/queue'
-import { Queue } from 'bullmq'
+import { withQueue, upsertJobScheduler, removeJobScheduler, getJobSchedulers } from '@pokus3/queue/operations'
 
 async function syncScheduler() {
   console.log('🔄 Starting Job Scheduler Synchronization...')
@@ -13,54 +12,50 @@ async function syncScheduler() {
   for (const workerType of distinctWorkerTypes) {
     console.log(`\\nChecking Queue: [${workerType}]`)
 
-    const queue = new Queue(workerType, {
-      connection: { host: config.redisHost },
-    })
+    await withQueue(workerType, config.redisHost, async (queue) => {
+      const existingSchedulers = await getJobSchedulers(queue, 0, 100)
 
-    const existingSchedulers = await queue.getJobSchedulers(0, 100) // Načítame dostatočné množstvo
+      console.log(`Found ${existingSchedulers.length} existing schedulers in queue.`)
 
-    console.log(`Found ${existingSchedulers.length} existing schedulers in queue.`)
+      for (const scheduler of existingSchedulers) {
+        const schedulerId = scheduler.key
 
-    for (const scheduler of existingSchedulers) {
-      const schedulerId = scheduler.key
+        console.log(`Checking scheduler: ${schedulerId}`, scheduler)
 
-      console.log(`Checking scheduler: ${schedulerId}`, scheduler)
+        const dbJob = await Job.findById(schedulerId)
 
-      const dbJob = await Job.findById(schedulerId)
-
-      if (!dbJob || !dbJob.enable || dbJob.type !== workerType) {
-        console.log(`🧹 Removing orphaned/disabled scheduler: ${schedulerId}`)
-        await queue.removeJobScheduler(schedulerId)
+        if (!dbJob || !dbJob.enable || dbJob.type !== workerType) {
+          console.log(`🧹 Removing orphaned/disabled scheduler: ${schedulerId}`)
+          await removeJobScheduler(queue, schedulerId)
+        }
       }
-    }
 
-    const activeJobs = await Job.find({
-      type: workerType,
-      enable: true,
-    })
+      const activeJobs = await Job.find({
+        type: workerType,
+        enable: true,
+      })
 
-    for (const job of activeJobs) {
-      const schedulerId = job.id
+      for (const job of activeJobs) {
+        const schedulerId = job.id
 
-      await queue.upsertJobScheduler(
-        schedulerId,
-        {
-          pattern: job.cronExpression,
-          // Môžeme pridať startDate, endDate ak treba
-        },
-        {
-          name: job.name,
-          data: {
-            jobId: schedulerId,
-            payload: job.payload,
+        await upsertJobScheduler(
+          queue,
+          schedulerId,
+          {
+            pattern: job.cronExpression,
           },
-        },
-      )
-      process.stdout.write(`✅ Upserted: ${job.name} `)
-    }
-    console.log(`\\nDone with ${workerType}`)
-
-    await queue.close()
+          {
+            name: job.name,
+            data: {
+              jobId: schedulerId,
+              payload: job.payload,
+            },
+          },
+        )
+        process.stdout.write(`✅ Upserted: ${job.name} `)
+      }
+      console.log(`\\nDone with ${workerType}`)
+    })
   }
 
   console.log('\\n🏁 Synchronization complete.')
@@ -92,23 +87,19 @@ const clearAllJobSchedulers = async () => {
   for (const workerType of distinctWorkerTypes) {
     console.log(`\\nClearing Queue: [${workerType}]`)
 
-    const queue = new Queue(workerType, {
-      connection: { host: config.redisHost },
+    await withQueue(workerType, config.redisHost, async (queue) => {
+      const existingSchedulers = await getJobSchedulers(queue, 0, 100)
+
+      console.log(`Found ${existingSchedulers.length} existing schedulers in queue.`)
+
+      for (const scheduler of existingSchedulers) {
+        const schedulerId = scheduler.key
+
+        console.log(`Removing scheduler: ${schedulerId}`)
+
+        await removeJobScheduler(queue, schedulerId)
+      }
     })
-
-    const existingSchedulers = await queue.getJobSchedulers(0, 100) // Načítame dostatočné množstvo
-
-    console.log(`Found ${existingSchedulers.length} existing schedulers in queue.`)
-
-    for (const scheduler of existingSchedulers) {
-      const schedulerId = scheduler.key
-
-      console.log(`Removing scheduler: ${schedulerId}`)
-
-      await queue.removeJobScheduler(schedulerId)
-    }
-
-    await queue.close()
   }
 
   console.log('\\n🏁 All schedulers cleared.')

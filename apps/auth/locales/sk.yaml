@@ -1,2 +1,4 @@
 error:
- not_found: Nenájdené
+ not_found: Not Found
+ unauthorized: Unauthorized
+ already_authenticated: Already Authenticated

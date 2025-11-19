@@ -1,4 +1,4 @@
-import config from '@config'
+import config from '@pokus3/config'
 import connectDB from '@pokus3/db'
 import { Worker } from 'bullmq'
 import { QUEUE_NAMES } from '@pokus3/queue/config'
