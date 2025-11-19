@@ -17,6 +17,8 @@ const schedulers = async (_req: Request, res: Response) => {
   for (const job of jobs) {
     const activeSchedulers = await getActiveJobsStauses(job.type)
 
+    if (activeSchedulers.length <= 0) continue
+
     schedulers[job.type] = activeSchedulers
   }
 
@@ -69,21 +71,27 @@ const update = async (req: Request, res: Response) => {
   const { id } = req.params
   const { name, type, cronExpression, enable, retryAttempts } = req.body
 
-  const job = await Job.findByIdAndUpdate(
-    id,
-    {
-      name,
-      type,
-      cronExpression,
-      enable,
-      retryAttempts,
-    },
-    { new: true },
-  )
+  const job = await Job.findByIdAndUpdate(id, { name, type, cronExpression, enable, retryAttempts }, { new: true })
 
   if (!job) {
     return res.status(404).json({ message: 'Job not found' })
   }
+
+  const queue = new Queue(job.type, {
+    connection: { host: config.redisHost },
+  })
+
+  await queue.removeJobScheduler(job.id)
+
+  if (enable) {
+    await queue.upsertJobScheduler(
+      job.id,
+      { pattern: cronExpression },
+      { name: job.name, data: { jobId: job.id, payload: job.payload } },
+    )
+  }
+
+  await queue.close()
 
   res.json(job)
 }

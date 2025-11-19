@@ -325,6 +325,9 @@ importers:
       cron-parser:
         specifier: ^5.4.0
         version: 5.4.0
+      dayjs:
+        specifier: ^1.11.19
+        version: 1.11.19
       lucide-react:
         specifier: ^0.546.0
         version: 0.546.0(react@19.2.0)
