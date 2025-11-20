@@ -1,7 +1,7 @@
 import type { Request, Response } from 'express'
 import config from '@pokus3/config'
 import Job from '@pokus3/db/models/job'
-import { upsertScheduler, removeScheduler, getAllSchedulers, performJobNow } from '@pokus3/queue/operations'
+import { upsertScheduler, removeScheduler, getAllSchedulers, addToQueue } from '@pokus3/queue/operations'
 
 const index = async (_req: Request, res: Response) => {
   const jobs = await Job.find({})
@@ -31,12 +31,10 @@ const create = async (req: Request, res: Response) => {
   const job = await Job.create({ name, type, cronExpression, retryAttempts, enable })
 
   if (enable) {
-    const jobScheduler = await upsertScheduler(type, config.redisHost, job.id, cronExpression, job.name, {
+    await upsertScheduler(type, config.redisHost, job.id, cronExpression, job.name, {
       jobId: job.id,
       payload: job.payload,
     })
-
-    job.schedulerId = jobScheduler.id
 
     await job.save()
   }
@@ -51,7 +49,7 @@ const performNow = async (req: Request, res: Response) => {
 
   if (!job) throw new Error('Job not found')
 
-  await performJobNow(job.type, config.redisHost, job.id)
+  await addToQueue(job.type, config.redisHost, { jobId: job.id, payload: job.payload })
 
   res.status(200).json({ message: 'Job performed successfully' })
 }

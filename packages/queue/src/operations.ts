@@ -43,7 +43,15 @@ export async function removeJobScheduler(queue: Queue, schedulerId: string): Pro
  * Gets all job schedulers from the queue
  */
 export async function getJobSchedulers(queue: Queue, start = 0, end = 100) {
-  return await queue.getJobSchedulers(start, end)
+  const scheduler = await queue.getJobSchedulers(start, end)
+  return scheduler
+}
+
+export async function addToQueue(queueName: string, redisHost: string, jobData: JobData): Promise<void> {
+  withQueue(queueName, redisHost, async (queue) => {
+    const job = await queue.add('immediate-job', jobData)
+    return job
+  })
 }
 
 /**
