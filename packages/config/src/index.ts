@@ -1,32 +1,4 @@
-export interface Config {
-  environment: string
-  isDev: boolean
-  isProd: boolean
-
-  // Database
-  mongoUri: string
-
-  // Redis
-  redisHost: string
-
-  // Common secrets
-  sessionSecret: string
-  cookieDomain: string
-
-  // App-specific namespaces
-  api?: {
-    webPort: string
-  }
-
-  auth?: {
-    webPort: string
-    magicLoginSecret: string
-    magicLinkExpiration: string
-    magicLoginRedirect: string
-  }
-}
-
-const config: Config = {
+const config = {
   environment: process.env.NODE_ENV || 'development',
   isDev: process.env.NODE_ENV !== 'production',
   isProd: process.env.NODE_ENV === 'production',
@@ -49,9 +21,19 @@ const config: Config = {
   // Auth namespace
   auth: {
     webPort: process.env.AUTH_PORT || '3002',
+
     magicLoginSecret: process.env.MAGIC_LOGIN_SECRET || 'default_secret',
     magicLinkExpiration: '15m',
-    magicLoginRedirect: process.env.MAGIC_LOGIN_REDIRECT || 'http://dashboard.pokus.local',
+    redirect: process.env.MAGIC_LOGIN_REDIRECT || 'http://dashboard.pokus.local',
+
+    discordClientId: process.env.DISCORD_CLIENT_ID || '',
+    discordClientSecret: process.env.DISCORD_CLIENT_SECRET || '',
+  },
+
+  discord: {
+    guildId: process.env.DISCORD_GUILD_ID || '',
+    botToken: process.env.DISCORD_BOT_TOKEN || '',
+    memberRoleId: process.env.DISCORD_MEMBER_ROLE_ID || '',
   },
 }
 

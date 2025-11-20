@@ -1,6 +1,7 @@
 {
   "$schema": "https://turbo.build/schema.json",
   "ui": "tui",
+  "globalEnv": ["DISCORD_CLIENT_ID", "DISCORD_CLIENT_SECRET"],
   "tasks": {
     "build": {
       "dependsOn": ["^build", "check-locales:missing"],

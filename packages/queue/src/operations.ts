@@ -1,4 +1,4 @@
-import { Queue, type JobType } from 'bullmq'
+import { Job, Queue, type JobType } from 'bullmq'
 
 export interface SchedulerOptions {
   pattern: string
@@ -28,8 +28,8 @@ export async function upsertJobScheduler(
   schedulerId: string,
   schedulerOptions: SchedulerOptions,
   jobOptions: { name: string; data: JobData },
-): Promise<void> {
-  await queue.upsertJobScheduler(schedulerId, schedulerOptions, jobOptions)
+): Promise<Job> {
+  return await queue.upsertJobScheduler(schedulerId, schedulerOptions, jobOptions)
 }
 
 /**
@@ -79,9 +79,22 @@ export async function upsertScheduler(
   cronExpression: string,
   jobName: string,
   jobData: JobData,
-): Promise<void> {
+): Promise<Job> {
+  return await withQueue(queueName, redisHost, async (queue) => {
+    return await upsertJobScheduler(queue, schedulerId, { pattern: cronExpression }, { name: jobName, data: jobData })
+  })
+}
+
+/**
+ * Perform Now a job by ID
+ */
+export async function performJobNow(queueName: string, redisHost: string, jobId: string): Promise<void> {
   await withQueue(queueName, redisHost, async (queue) => {
-    await upsertJobScheduler(queue, schedulerId, { pattern: cronExpression }, { name: jobName, data: jobData })
+    // console.log(await queue.getJobs())
+    const job = await queue.getJob(jobId)
+    if (!job) throw new Error('Job not found')
+    await job.promote()
+    // console.log(job)
   })
 }
 

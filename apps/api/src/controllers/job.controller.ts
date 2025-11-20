@@ -1,7 +1,7 @@
 import type { Request, Response } from 'express'
 import config from '@pokus3/config'
 import Job from '@pokus3/db/models/job'
-import { upsertScheduler, removeScheduler, getAllSchedulers } from '@pokus3/queue/operations'
+import { upsertScheduler, removeScheduler, getAllSchedulers, performJobNow } from '@pokus3/queue/operations'
 
 const index = async (_req: Request, res: Response) => {
   const jobs = await Job.find({})
@@ -31,13 +31,29 @@ const create = async (req: Request, res: Response) => {
   const job = await Job.create({ name, type, cronExpression, retryAttempts, enable })
 
   if (enable) {
-    await upsertScheduler(type, config.redisHost, job.id, cronExpression, job.name, {
+    const jobScheduler = await upsertScheduler(type, config.redisHost, job.id, cronExpression, job.name, {
       jobId: job.id,
       payload: job.payload,
     })
+
+    job.schedulerId = jobScheduler.id
+
+    await job.save()
   }
 
   res.status(201).json(job)
+}
+
+const performNow = async (req: Request, res: Response) => {
+  const { id } = req.params
+
+  const job = await Job.findById(id)
+
+  if (!job) throw new Error('Job not found')
+
+  await performJobNow(job.type, config.redisHost, job.id)
+
+  res.status(200).json({ message: 'Job performed successfully' })
 }
 
 const archive = async (req: Request, res: Response) => {
@@ -76,4 +92,4 @@ const update = async (req: Request, res: Response) => {
   res.json(job)
 }
 
-export default { index, schedulers, create, archive, update }
+export default { index, schedulers, create, archive, update, performNow }

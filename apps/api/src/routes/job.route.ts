@@ -11,6 +11,7 @@ const router: Router = express.Router()
 router.get('/', jobController.index)
 router.get('/schedulers', jobController.schedulers)
 router.post('/', validate({ body: jobCreateSchema }), jobController.create)
+router.get('/:id/perform', jobController.performNow)
 router.delete('/:id', validate({ params: jobArchiveSchema }), jobController.archive)
 router.put('/:id', validate({ params: jobUpdateSchemaParams, body: jobUpdateSchemaBody }), jobController.update)
 

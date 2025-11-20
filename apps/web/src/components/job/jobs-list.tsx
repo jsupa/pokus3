@@ -24,6 +24,8 @@ interface JobsListProps {
   editingJobId?: string
   onEdit: (job: Job) => void
   onDelete: (jobId: string) => void
+  onPerform?: (jobId: string) => Promise<void>
+  performingJobId?: string | null
 }
 
 function getNextRuntime(cronExpression: string): Date | null {
@@ -36,7 +38,16 @@ function getNextRuntime(cronExpression: string): Date | null {
   }
 }
 
-export function JobsList({ jobs, loading, deletingJobId, editingJobId, onEdit, onDelete }: JobsListProps) {
+export function JobsList({
+  jobs,
+  loading,
+  deletingJobId,
+  editingJobId,
+  onEdit,
+  onDelete,
+  onPerform,
+  performingJobId,
+}: JobsListProps) {
   return (
     <Card>
       <CardHeader>
@@ -54,6 +65,7 @@ export function JobsList({ jobs, loading, deletingJobId, editingJobId, onEdit, o
               const nextRun = getNextRuntime(job.cronExpression)
               const isDeleting = deletingJobId === job._id
               const isEditing = editingJobId === job._id
+              const isPerforming = performingJobId === job._id
 
               return (
                 <div
@@ -86,10 +98,28 @@ export function JobsList({ jobs, loading, deletingJobId, editingJobId, onEdit, o
                     <div className="text-xs text-muted-foreground">
                       {job.createdAt && <span>Created: {new Date(job.createdAt).toLocaleDateString()}</span>}
                     </div>
-                    <Button variant="outline" size="sm" onClick={() => onEdit(job)} disabled={isDeleting || isEditing}>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => onPerform?.(job._id)}
+                      disabled={isDeleting || isEditing || isPerforming}
+                    >
+                      {isPerforming ? 'Running...' : 'Perform Now'}
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => onEdit(job)}
+                      disabled={isDeleting || isEditing || isPerforming}
+                    >
                       Edit
                     </Button>
-                    <Button variant="destructive" size="sm" onClick={() => onDelete(job._id)} disabled={isDeleting}>
+                    <Button
+                      variant="destructive"
+                      size="sm"
+                      onClick={() => onDelete(job._id)}
+                      disabled={isDeleting || isPerforming}
+                    >
                       {isDeleting ? 'Deleting...' : 'Delete'}
                     </Button>
                   </div>

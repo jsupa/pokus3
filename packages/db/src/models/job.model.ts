@@ -6,6 +6,7 @@ export interface IJob extends SoftDeleteDocument {
   name: string // Job name
   type: (typeof QUEUE_NAMES)[keyof typeof QUEUE_NAMES] // Job type
   enable: boolean // Is job enabled
+  schedulerId?: string // Associated scheduler ID
   payload: object // Job payload/data
   lastRunAt: Date | null // Last run timestamp
   nextRunAt: Date | null // Next run timestamp
@@ -23,6 +24,7 @@ const userSchema: Schema = new Schema(
     name: { type: String, required: true },
     type: { type: String, enum: Object.values(QUEUE_NAMES), required: true },
     enable: { type: Boolean, default: true },
+    schedulerId: { type: String, required: false },
     payload: { type: Object, required: false, default: {} },
     lastRunAt: { type: Date, default: null },
     nextRunAt: { type: Date, default: null },

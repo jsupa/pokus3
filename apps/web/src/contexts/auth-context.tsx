@@ -6,6 +6,7 @@ import type { ReactNode } from 'react'
 interface User {
   email?: string
   name?: string
+  isAdmin?: boolean
   [key: string]: any
 }
 
@@ -13,6 +14,7 @@ interface AuthContextType {
   user: User | null
   isAuthenticated: boolean
   isLoading: boolean
+  isAdmin: boolean
   checkAuth: () => Promise<void>
   logout: () => Promise<void>
 }
@@ -23,6 +25,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [isAuthenticated, setIsAuthenticated] = useState(false)
+  const [isAdmin, setIsAdmin] = useState(false)
 
   const checkAuth = async () => {
     try {
@@ -35,9 +38,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         const data = await response.json()
         setUser(data)
         setIsAuthenticated(true)
+        setIsAdmin(data.isAdmin || false)
       } else {
         setUser(null)
         setIsAuthenticated(false)
+        setIsAdmin(false)
       }
     } catch (error) {
       console.error('Auth check error:', error)
@@ -56,6 +61,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       })
       setUser(null)
       setIsAuthenticated(false)
+      setIsAdmin(false)
     } catch (error) {
       console.error('Logout error:', error)
     }
@@ -66,7 +72,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, [])
 
   return (
-    <AuthContext.Provider value={{ user, isAuthenticated, isLoading, checkAuth, logout }}>
+    <AuthContext.Provider value={{ user, isAuthenticated, isLoading, isAdmin, checkAuth, logout }}>
       {children}
     </AuthContext.Provider>
   )
