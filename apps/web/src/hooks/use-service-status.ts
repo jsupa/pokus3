@@ -17,7 +17,7 @@ export function useServiceStatus() {
     const checkServices = async () => {
       // Check Auth service
       try {
-        const authResponse = await fetch(process.env.NEXT_PUBLIC_MAGIC_LOGIN_AUTH || '', {
+        const authResponse = await fetch(`${process.env.NEXT_PUBLIC_AUTH_URL}/health` || '', {
           method: 'HEAD',
           credentials: 'include',
         })
@@ -28,7 +28,7 @@ export function useServiceStatus() {
 
       // Check API service
       try {
-        const apiResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/user/me`, {
+        const apiResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/health`, {
           method: 'HEAD',
           credentials: 'include',
         })

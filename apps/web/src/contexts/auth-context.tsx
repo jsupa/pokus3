@@ -55,7 +55,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const logout = async () => {
     try {
-      await fetch(process.env.NEXT_PUBLIC_LOGOUT_URL || '/logout', {
+      await fetch(`${process.env.NEXT_PUBLIC_AUTH_URL}/logout` || '/logout', {
         method: 'GET',
         credentials: 'include',
       })

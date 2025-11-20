@@ -31,6 +31,8 @@ const setupServer = (config: ServerConfig) => {
   app.use(Express.json())
   app.use(Express.urlencoded({ extended: true }))
 
+  app.get('/health', (_req: Request, res: Response) => res.send('OK'))
+
   const store = MongoStore.create({
     mongoUrl: config.mongoUri,
     collectionName: 'sessions',
