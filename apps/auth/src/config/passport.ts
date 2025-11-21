@@ -1,6 +1,7 @@
 import passport from 'passport'
 import _MagicLoginStrategy from 'passport-magic-login'
 import { Strategy as DiscordStrategy, type Profile } from 'passport-discord-auth'
+import SteamStrategy from 'passport-steam'
 
 import type { Request, Response, NextFunction } from 'express'
 
@@ -72,8 +73,23 @@ const discord: any = new DiscordStrategy(
   verifyDicord,
 )
 
+const verifySteam = async (identifier: string, profile: any, done: Function) => {
+  console.log(identifier, profile)
+  done(new Error('Not implemented'), null)
+}
+
+const steam = new SteamStrategy(
+  {
+    returnURL: 'http://auth.pokus.local/steam/callback',
+    realm: 'http://auth.pokus.local/',
+    apiKey: config.auth!.steamApiKey || '',
+  },
+  verifySteam,
+)
+
 passport.use('magiclogin', magicLogin)
 passport.use('discord', discord)
+passport.use('steam', steam)
 
 passport.serializeUser((user: Express.User, done) => {
   done(null, (user as IUser).id)

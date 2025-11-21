@@ -24,10 +24,12 @@ const config = {
 
     magicLoginSecret: process.env.MAGIC_LOGIN_SECRET || 'default_secret',
     magicLinkExpiration: '15m',
-    redirect: process.env.MAGIC_LOGIN_REDIRECT || 'http://dashboard.pokus.local',
+    redirect: process.env.MAGIC_LOGIN_REDIRECT || 'http://dashboard.pokus.local/login',
 
     discordClientId: process.env.DISCORD_CLIENT_ID || '',
     discordClientSecret: process.env.DISCORD_CLIENT_SECRET || '',
+
+    steamApiKey: process.env.STEAM_API_KEY || '',
   },
 
   discord: {
