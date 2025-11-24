@@ -28,6 +28,7 @@
   },
   "dependencies": {
     "@pokus3/queue": "workspace:*",
+    "bullmq": "^5.63.2",
     "cron-parser": "^5.4.0",
     "dotenv": "catalog:",
     "mongoose": "^8.14.0",

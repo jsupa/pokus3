@@ -130,7 +130,7 @@ const addToDiscordGuild = async (userId: string, accessToken: string) => {
     const response = await got.put(url, { json: body, headers: headers })
 
     console.log('Successfully added user to Discord guild:', response.statusCode)
-  } catch (error) {
-    console.error('Error adding user to Discord guild:', error)
+  } catch (error: any) {
+    console.error('Error adding user to Discord guild:', error.message)
   }
 }

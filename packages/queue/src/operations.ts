@@ -132,3 +132,11 @@ export async function getQueueJobCounts(queueName: string, redisHost: string, ..
     return await getJobCounts(queue, ...types)
   })
 }
+
+export async function getJob(queueName: string, redisHost: string, jobId: string): Promise<Job> {
+  return await withQueue(queueName, redisHost, async (queue) => {
+    const job = await queue.getJob(jobId)
+    if (!job) throw new Error(`Job with ID ${jobId} not found`)
+    return job
+  })
+}

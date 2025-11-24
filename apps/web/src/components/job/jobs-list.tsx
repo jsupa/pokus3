@@ -90,7 +90,7 @@ export function JobsList({
                     </div>
                     {nextRun && job.enable !== false && (
                       <div className="text-sm text-emerald-600 dark:text-emerald-400">
-                        Next run: {dayjs(nextRun).format('MMM D, YYYY h:mm A')}
+                        Next run: {dayjs(nextRun).toDate().toString()}
                       </div>
                     )}
                   </div>

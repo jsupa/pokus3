@@ -185,7 +185,8 @@ export function LoginForm({ isAuthOnline = true }: LoginFormProps) {
           variant="outline"
           className="w-full mt-2"
           onClick={handleSteamLogin}
-          disabled={!isAuthOnline}
+          // disabled={!isAuthOnline}
+          disabled={true}
         >
           <svg className="mr-2 h-4 w-4" viewBox="0 0 24 24" fill="currentColor">
             <path d={SimpleIcons.siSteam.path} />

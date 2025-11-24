@@ -9,9 +9,10 @@ import { jobCreateSchema, jobArchiveSchema, jobUpdateSchemaParams, jobUpdateSche
 const router: Router = express.Router()
 
 router.get('/', jobController.index)
-router.get('/schedulers', jobController.schedulers)
 router.post('/', validate({ body: jobCreateSchema }), jobController.create)
+router.get('/schedulers', jobController.schedulers)
 router.get('/:id/perform', jobController.performNow)
+router.get('/:id/history', jobController.history)
 router.delete('/:id', validate({ params: jobArchiveSchema }), jobController.archive)
 router.put('/:id', validate({ params: jobUpdateSchemaParams, body: jobUpdateSchemaBody }), jobController.update)
 

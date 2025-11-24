@@ -43,6 +43,7 @@ async function startWorker() {
 
         await new Promise((r) => setTimeout(r, 10000))
 
+        // throw new Error('Simulated error for testing')
         return { result: 'Done' }
       } catch (error: any) {
         throw error

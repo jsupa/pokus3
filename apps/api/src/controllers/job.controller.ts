@@ -2,6 +2,8 @@ import type { Request, Response } from 'express'
 import config from '@pokus3/config'
 import Job from '@pokus3/db/models/job'
 import { upsertScheduler, removeScheduler, getAllSchedulers, addToQueue } from '@pokus3/queue/operations'
+import QueueJobLog from '@pokus3/db/models/queue-job-log'
+import mongoose from 'mongoose'
 
 const index = async (_req: Request, res: Response) => {
   const jobs = await Job.find({})
@@ -23,6 +25,35 @@ const schedulers = async (_req: Request, res: Response) => {
   }
 
   res.json(schedulers)
+}
+
+const history = async (req: Request, res: Response) => {
+  const { id } = req.params
+  const pipeline = [
+    { $match: { jobId: new mongoose.Types.ObjectId(id) } }, // Filter logs for the specific jobId
+    { $sort: { createdAt: -1 } }, // Sort by createdAt descending
+    {
+      $group: {
+        _id: '$queueId', // Group by queueId
+        logs: { $push: '$$ROOT' }, // Collect all log documents for each queueId (in descending createdAt order)
+        latestCreatedAt: { $first: '$createdAt' }, // Capture the most recent createdAt for sorting groups
+      },
+    },
+    { $sort: { latestCreatedAt: -1 } }, // Sort groups by the most recent createdAt descending
+    { $limit: 5 }, // Limit to the last 5 unique queueIds
+    {
+      $project: {
+        _id: 0, // Remove the _id field (which is queueId)
+        queueId: '$_id', // Rename _id back to queueId
+        logs: 1, // Keep the array of logs
+      },
+    },
+  ] as any[]
+
+  const lastJobLogs = await QueueJobLog.aggregate(pipeline)
+  // const lastJobLogs = await QueueJobLog.find({ jobId: id }).sort({ createdAt: -1 }).limit(50).exec()
+
+  res.json(lastJobLogs)
 }
 
 const create = async (req: Request, res: Response) => {
@@ -90,4 +121,4 @@ const update = async (req: Request, res: Response) => {
   res.json(job)
 }
 
-export default { index, schedulers, create, archive, update, performNow }
+export default { index, schedulers, create, archive, update, performNow, history }
