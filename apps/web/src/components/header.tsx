@@ -8,7 +8,7 @@ import { useAuth } from '@/contexts/auth-context'
 import { useServiceStatus } from '@/hooks/use-service-status'
 
 export default function Header() {
-  const links = [{ to: '/', label: 'Home' }] as const
+  // const links = [{ to: '/', label: 'Home' }] as const
   const { isAuthenticated } = useAuth()
   const serviceStatus = useServiceStatus()
 
@@ -19,7 +19,7 @@ export default function Header() {
           <Link href="/" className="flex items-center">
             <ThemeLogo className="h-8 w-auto" priority />
           </Link>
-          <nav className="flex gap-4 text-lg">
+          {/* <nav className="flex gap-4 text-lg">
             {links.map(({ to, label }) => {
               return (
                 <Link key={to} href={to}>
@@ -27,7 +27,7 @@ export default function Header() {
                 </Link>
               )
             })}
-          </nav>
+          </nav> */}
         </div>
         <div className="flex items-center gap-4">
           <ServiceStatus

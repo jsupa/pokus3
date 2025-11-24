@@ -25,7 +25,7 @@ export interface QueueJobLog extends SoftDeleteDocument {
 
 export interface QueueJobLogModel extends SoftDeleteModel<QueueJobLog> {}
 
-const queueJobLogSchema: Schema = new Schema(
+const modelSchema: Schema = new Schema(
   {
     jobId: { type: mongoose.Types.ObjectId, ref: 'Job', required: true },
     queueId: { type: String, required: true },
@@ -39,8 +39,8 @@ const queueJobLogSchema: Schema = new Schema(
   },
 )
 
-queueJobLogSchema.plugin(MongooseDelete, { deletedAt: true, overrideMethods: true })
+modelSchema.plugin(MongooseDelete, { deletedAt: true, overrideMethods: true })
 
-const QueueJobLog = mongoose.model<QueueJobLog, QueueJobLogModel>('QueueJobLog', queueJobLogSchema)
+const QueueJobLog = mongoose.model<QueueJobLog, QueueJobLogModel>('QueueJobLog', modelSchema)
 
 export default QueueJobLog

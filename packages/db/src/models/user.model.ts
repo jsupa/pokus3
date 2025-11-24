@@ -12,7 +12,7 @@ export interface IUserModel extends Model<IUser> {
   getRandomUser(): Promise<IUser>
 }
 
-const userSchema: Schema = new Schema(
+const modelSchema: Schema = new Schema(
   {
     username: { type: String },
     email: { type: String, required: true, unique: true },
@@ -23,7 +23,7 @@ const userSchema: Schema = new Schema(
   },
 )
 
-userSchema.methods.sendWelcomeEmail = async function () {
+modelSchema.methods.sendWelcomeEmail = async function () {
   const { email } = this
 
   try {
@@ -34,11 +34,11 @@ userSchema.methods.sendWelcomeEmail = async function () {
   }
 }
 
-userSchema.statics.getRandomUser = async function () {
+modelSchema.statics.getRandomUser = async function () {
   const user = await User.aggregate([{ $sample: { size: 1 } }])
   return user
 }
 
-const User = mongoose.model<IUser, IUserModel>('User', userSchema)
+const User = mongoose.model<IUser, IUserModel>('User', modelSchema)
 
 export default User

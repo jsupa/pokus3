@@ -32,6 +32,7 @@ const index = async (req: Request, res: Response) => {
       links: [
         { name: 'Users', path: '/users' },
         { name: 'Jobs', path: '/jobs' },
+        { name: 'Domains', path: '/domains' },
       ],
     })
   }

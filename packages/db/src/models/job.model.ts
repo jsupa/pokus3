@@ -18,7 +18,7 @@ export interface IJob extends SoftDeleteDocument {
 
 export interface IJobModel extends SoftDeleteModel<IJob> {}
 
-const userSchema: Schema = new Schema(
+const modelSchema: Schema = new Schema(
   {
     name: { type: String, required: true },
     type: { type: String, enum: Object.values(QUEUE_NAMES), required: true },
@@ -34,8 +34,8 @@ const userSchema: Schema = new Schema(
   },
 )
 
-userSchema.plugin(MongooseDelete, { deletedAt: true, overrideMethods: true })
+modelSchema.plugin(MongooseDelete, { deletedAt: true, overrideMethods: true })
 
-const Job = mongoose.model<IJob, IJobModel>('Job', userSchema)
+const Job = mongoose.model<IJob, IJobModel>('Job', modelSchema)
 
 export default Job
