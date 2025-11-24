@@ -13,21 +13,12 @@ export default function Header() {
   const serviceStatus = useServiceStatus()
 
   return (
-    <div>
+    <div className="sticky top-0 z-50 bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60">
       <div className="flex flex-row items-center justify-between px-2 py-1">
         <div className="flex items-center gap-4">
           <Link href="/" className="flex items-center">
             <ThemeLogo className="h-8 w-auto" priority />
           </Link>
-          {/* <nav className="flex gap-4 text-lg">
-            {links.map(({ to, label }) => {
-              return (
-                <Link key={to} href={to}>
-                  {label}
-                </Link>
-              )
-            })}
-          </nav> */}
         </div>
         <div className="flex items-center gap-4">
           <ServiceStatus
