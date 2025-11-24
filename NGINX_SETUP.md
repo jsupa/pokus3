@@ -19,6 +19,7 @@ Add these lines:
 ```
 127.0.0.1    dashboard.pokus.local
 127.0.0.1    api.pokus.local
+127.0.0.1    auth.pokus.local
 ```
 
 Save and exit (Ctrl+X, then Y, then Enter in nano).
