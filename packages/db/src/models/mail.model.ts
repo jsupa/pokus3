@@ -18,7 +18,7 @@ export interface IMail extends Document {
   timeAgo?: string
 }
 
-const mailSchema = new Schema(
+const modelSchema = new Schema(
   {
     from: { type: String },
     to: { type: String, index: true },
@@ -38,6 +38,6 @@ const mailSchema = new Schema(
   },
 )
 
-const Mail = mongoose.model<IMail>('Mail', mailSchema)
+const Mail = mongoose.model<IMail>('Mail', modelSchema)
 
 export default Mail

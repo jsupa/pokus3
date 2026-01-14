@@ -13,13 +13,13 @@
     "@pokus3/db": "workspace:*",
     "@pokus3/queue": "workspace:*",
     "@pokus3/server": "workspace:*",
-    "bullmq": "^5.63.2"
+    "bullmq": "^5.65.1"
   },
   "devDependencies": {
     "@pokus3/config": "workspace:*",
     "@types/node": "catalog:",
     "tsdown": "catalog:",
-    "tsx": "^4.20.6",
+    "tsx": "^4.21.0",
     "typescript": "catalog:"
   }
 }

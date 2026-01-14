@@ -1,0 +1,14 @@
+{
+  "name": "@pokus3/logger",
+  "version": "0.0.0",
+  "type": "module",
+  "main": "./src/index.ts",
+  "scripts": {},
+  "dependencies": {
+    "winston": "^3.17.0",
+    "winston-loki": "^6.1.2"
+  },
+  "devDependencies": {
+    "@pokus3/config": "workspace:*"
+  }
+}

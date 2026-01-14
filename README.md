@@ -1,10 +1,27 @@
 # pokus3
 
-This project was created with [Better-T-Stack](https://github.com/AmanVarshney01/create-better-t-stack), a modern TypeScript stack that combines Next.js, Express, and more.
+
+## Available Scripts
+
+- `pnpm run dev`: Start all applications in development mode
+- `pnpm run build`: Build all applications
+
+## turbo.json configuration
+
+envMode
+Default: "strict"
+
+Turborepo's Environment Modes allow you to control which environment variables are available to a task at runtime:
+
+"strict": Filter environment variables to only those that are specified in the env and globalEnv keys in turbo.json.
+"loose": Allow all environment variables for the process to be available.
+
+
 
 ## Features
 
 - **TypeScript** - For type safety and improved developer experience
+- **Tsdown** - Type-safe API client generation
 - **Next.js** - Full-stack React framework
 - **TailwindCSS** - Utility-first CSS for rapid UI development
 - **shadcn/ui** - Reusable UI components
@@ -60,7 +77,3 @@ pnpm install
 └─────────────┘
 ```
 
-## Available Scripts
-
-- `pnpm run dev`: Start all applications in development mode
-- `pnpm run build`: Build all applications

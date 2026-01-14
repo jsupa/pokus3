@@ -1,4 +1,4 @@
-import { Job, Queue, type JobType } from 'bullmq'
+import { Job, Queue, QueueEvents, type JobType } from 'bullmq'
 
 export interface SchedulerOptions {
   pattern: string
@@ -21,13 +21,29 @@ export function createQueue(queueName: string, redisHost: string): Queue {
 }
 
 /**
+ * Creates a Queue along with its QueueEvents
+ */
+export function createQueueWithEvents(
+  queueName: string,
+  redisHost: string,
+): { queue: Queue; queueEvents: QueueEvents } {
+  const queue = new Queue(queueName, {
+    connection: { host: redisHost },
+  })
+  const queueEvents = new QueueEvents(queueName, {
+    connection: { host: redisHost },
+  })
+  return { queue, queueEvents }
+}
+
+/**
  * Upserts a job scheduler in the queue
  */
 export async function upsertJobScheduler(
   queue: Queue,
   schedulerId: string,
   schedulerOptions: SchedulerOptions,
-  jobOptions: { name: string; data: JobData },
+  jobOptions: { name: string; data: JobData; opts: any },
 ): Promise<Job> {
   return await queue.upsertJobScheduler(schedulerId, schedulerOptions, jobOptions)
 }
@@ -47,8 +63,8 @@ export async function getJobSchedulers(queue: Queue, start = 0, end = 100) {
   return scheduler
 }
 
-export async function addToQueue(queueName: string, redisHost: string, jobData: JobData): Promise<void> {
-  withQueue(queueName, redisHost, async (queue) => {
+export async function addToQueue(queueName: string, redisHost: string, jobData: JobData): Promise<Job> {
+  return await withQueue(queueName, redisHost, async (queue) => {
     const job = await queue.add('immediate-job', jobData)
     return job
   })
@@ -87,9 +103,15 @@ export async function upsertScheduler(
   cronExpression: string,
   jobName: string,
   jobData: JobData,
+  attempts = 0,
 ): Promise<Job> {
   return await withQueue(queueName, redisHost, async (queue) => {
-    return await upsertJobScheduler(queue, schedulerId, { pattern: cronExpression }, { name: jobName, data: jobData })
+    return await upsertJobScheduler(
+      queue,
+      schedulerId,
+      { pattern: cronExpression },
+      { name: jobName, data: jobData, opts: { attempts } },
+    )
   })
 }
 

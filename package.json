@@ -9,7 +9,6 @@
   ],
   "scripts": {
     "dev": "turbo dev",
-    "dev:workers": "turbo dev --filter=\"./apps/workers/*\"",
     "build": "turbo build",
     "check-types": "turbo check-types",
     "pm2:start": "pm2 start ecosystem.config.cjs"

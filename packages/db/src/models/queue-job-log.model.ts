@@ -1,5 +1,4 @@
-import mongoose, { Schema } from 'mongoose'
-import MongooseDelete, { type SoftDeleteDocument, type SoftDeleteModel } from 'mongoose-delete'
+import mongoose, { Document, Model, Schema } from 'mongoose'
 import type { IJob } from './job.model'
 
 enum QueueJobStatus {
@@ -11,8 +10,8 @@ enum QueueJobStatus {
   FAILED = 'failed',
 }
 
-export interface QueueJobLog extends SoftDeleteDocument {
-  jobId: IJob['_id'] // Reference to the Job
+export interface QueueJobLog extends Document {
+  jobId: IJob // Reference to the Job
   queueId: string // ID of the job in the queue
   status: QueueJobStatus
   data?: any
@@ -23,7 +22,7 @@ export interface QueueJobLog extends SoftDeleteDocument {
   updatedAt: Date // Update timestamp
 }
 
-export interface QueueJobLogModel extends SoftDeleteModel<QueueJobLog> {}
+export interface QueueJobLogModel extends Model<QueueJobLog> {}
 
 const modelSchema: Schema = new Schema(
   {
@@ -38,8 +37,6 @@ const modelSchema: Schema = new Schema(
     timestamps: true,
   },
 )
-
-modelSchema.plugin(MongooseDelete, { deletedAt: true, overrideMethods: true })
 
 const QueueJobLog = mongoose.model<QueueJobLog, QueueJobLogModel>('QueueJobLog', modelSchema)
 

@@ -1,7 +1,7 @@
 import { z } from 'zod'
 
 const magicLoginSchema = z.object({
-  destination: z.email(),
+  destination: z.string(),
 })
 
 const callbackSchema = z.object({

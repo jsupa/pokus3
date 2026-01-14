@@ -1,8 +1,12 @@
-import mongoose, { Schema } from 'mongoose'
-import MongooseDelete, { type SoftDeleteDocument, type SoftDeleteModel } from 'mongoose-delete'
+import mongoose, { Schema, type PaginateModel } from 'mongoose'
+
+import Delete, { type SoftDeleteDocument, type SoftDeleteModel } from 'mongoose-delete'
+import Paginate from 'mongoose-paginate-v2'
+
 import { QUEUE_NAMES } from '@pokus3/queue/config'
 
 export interface IJob extends SoftDeleteDocument {
+  id: string
   name: string // Job name
   type: (typeof QUEUE_NAMES)[keyof typeof QUEUE_NAMES] // Job type
   enable: boolean // Is job enabled
@@ -16,7 +20,7 @@ export interface IJob extends SoftDeleteDocument {
   updatedAt: Date // Update timestamp
 }
 
-export interface IJobModel extends SoftDeleteModel<IJob> {}
+export interface IJobModel extends SoftDeleteModel<IJob>, PaginateModel<IJob> {}
 
 const modelSchema: Schema = new Schema(
   {
@@ -34,7 +38,8 @@ const modelSchema: Schema = new Schema(
   },
 )
 
-modelSchema.plugin(MongooseDelete, { deletedAt: true, overrideMethods: true })
+modelSchema.plugin(Delete, { deletedAt: true, overrideMethods: true })
+modelSchema.plugin(Paginate)
 
 const Job = mongoose.model<IJob, IJobModel>('Job', modelSchema)
 

@@ -9,7 +9,10 @@ export const redisConnection: ConnectionOptions = {
 
 export const QUEUE_NAMES = {
   EMAIL_DELETION: 'email-deletion',
-  // Add more queue names as needed
+  ACCOUNT_GENERATION: 'account-generation',
+  STEAM_COUNTRIES_UPDATE: 'steam-countries-update',
+  ORDER_RESERVATION: 'order-reservation',
+  ORDER_EXPIRATION: 'order-expiration',
 } as const
 
 export type QueueName = (typeof QUEUE_NAMES)[keyof typeof QUEUE_NAMES]

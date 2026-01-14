@@ -1,26 +1,28 @@
 {
-  "name": "@workers/email-deletion",
+  "name": "@workers/steam-countries-update",
   "main": "src/index.ts",
   "type": "module",
   "scripts": {
     "build": "tsdown",
     "check-types": "tsc -b",
-    "compile": "bun build --compile --minify --sourcemap --bytecode ./src/index.ts --outfile server",
     "dev": "tsx watch src/index.ts",
     "start": "node dist/index.js"
   },
   "dependencies": {
+    "@pokus3/config": "workspace:*",
     "@pokus3/db": "workspace:*",
     "@pokus3/queue": "workspace:*",
-    "@pokus3/server": "workspace:*",
-    "bullmq": "^5.63.2",
+    "bullmq": "^5.65.1",
+    "got": "^14.6.5",
+    "happy-dom": "^20.0.11",
+    "hpagent": "^1.2.0",
+    "jsdom": "^27.3.0",
     "uuid": "^13.0.0"
   },
   "devDependencies": {
-    "@pokus3/config": "workspace:*",
     "@types/node": "catalog:",
     "tsdown": "catalog:",
-    "tsx": "^4.20.6",
+    "tsx": "^4.21.0",
     "typescript": "catalog:"
   }
 }

@@ -3,36 +3,30 @@
   "type": "module",
   "exports": {
     ".": {
-      "types": "./dist/index.d.ts",
       "default": "./src/index.ts"
     },
     "./models/*": {
-      "types": "./dist/models/*.model.d.ts",
       "default": "./src/models/*.model.ts"
     },
     "./*": {
-      "types": "./dist/*.d.ts",
       "default": "./src/*.ts"
     }
   },
-  "scripts": {
-    "build": "tsdown"
-  },
+  "scripts": {},
   "devDependencies": {
-    "@pokus3/config": "workspace:*",
-    "@types/mongoose-delete": "^1.0.6",
-    "tsdown": "catalog:"
+    "@pokus3/config": "workspace:*"
   },
   "peerDependencies": {
     "typescript": "^5"
   },
   "dependencies": {
+    "@faker-js/faker": "^10.1.0",
+    "@pokus3/discord": "workspace:*",
     "@pokus3/queue": "workspace:*",
-    "bullmq": "^5.63.2",
-    "cron-parser": "^5.4.0",
-    "dotenv": "catalog:",
-    "mongoose": "^8.14.0",
-    "mongoose-delete": "^1.0.6",
-    "zod": "catalog:"
+    "@types/mongoose-delete": "^1.0.6",
+    "dayjs": "^1.11.19",
+    "mongoose": "^9.0.1",
+    "mongoose-delete": "^1.0.7",
+    "mongoose-paginate-v2": "^1.9.1"
   }
 }

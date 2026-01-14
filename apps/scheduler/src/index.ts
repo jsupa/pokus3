@@ -50,6 +50,7 @@ async function syncScheduler() {
               jobId: schedulerId,
               payload: job.payload,
             },
+            opts: { attempts: job.retryAttempts || 0 },
           },
         )
         process.stdout.write(`✅ Upserted: ${job.name} `)

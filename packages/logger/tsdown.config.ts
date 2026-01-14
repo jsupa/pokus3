@@ -5,6 +5,4 @@ export default defineConfig({
   format: 'esm',
   outDir: './dist',
   clean: true,
-  noExternal: [/@pokus3\/.*/],
-  external: ['snappy'],
 })

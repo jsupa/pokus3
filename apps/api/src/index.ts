@@ -17,6 +17,7 @@ const init = async () => {
     sessionSecret: config.sessionSecret,
     cookieDomain: config.cookieDomain,
     isProd: config.isProd,
+    name: 'api-server',
     router,
   })
 
